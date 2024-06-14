@@ -4,6 +4,9 @@ require("dotenv").config();
 
 // imports
 const db = require("./db");
+const {
+  default: globalErrorHandler,
+} = require("./middlewares/globalErrorHandler");
 
 // constants
 const app = express();
@@ -19,14 +22,7 @@ app.get("/", (req, res) => {
 });
 
 // global error handler
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-
-  return res.status(statusCode).json({
-    message: err.message,
-    errorStack: process.env.NODE_ENV === "development" ? err.stack : "",
-  });
-});
+app.use(globalErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running at port ${PORT}`);
